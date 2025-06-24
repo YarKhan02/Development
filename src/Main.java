@@ -1,14 +1,19 @@
+import org.hibernate.Transaction;
+import org.hibernate.Session;
+
+import model.Course;
+import model.Student;
+
 import java.io.IOException;
 import java.sql.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 import java.sql.ResultSetMetaData;
 
 public class Main {
     public static void create_table(Connection conn, String file_name) throws IOException, SQLException {
-        String sql = new String(Files.readAllBytes((Paths.get("src", file_name + ".sql"))));
+        String sql = new String(Files.readAllBytes((Paths.get("src", "sql", file_name + ".sql"))));
 
         String[] statements = sql.split(";");
         try (Statement stmt = conn.createStatement()) {
@@ -25,7 +30,7 @@ public class Main {
     }
 
     public static void insert_data(Connection conn, String file_name, List<Object> params) throws IOException, SQLException {
-        String sql = new String(Files.readAllBytes(Paths.get("src", file_name + ".sql"))).trim();
+        String sql = new String(Files.readAllBytes(Paths.get("src", "sql", file_name + ".sql"))).trim();
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             for (int i = 0; i < params.size(); i++) {
@@ -37,7 +42,7 @@ public class Main {
     }
 
     public static void fetch_record(Connection conn, String file_name) throws IOException, SQLException {
-        String sql = new String(Files.readAllBytes(Paths.get("src", file_name + ".sql"))).trim();
+        String sql = new String(Files.readAllBytes(Paths.get("src", "sql", file_name + ".sql"))).trim();
 
         try (Statement stmt = conn.createStatement()) {
             var record = stmt.executeQuery(sql);
@@ -55,20 +60,27 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        try (Connection con = DBUtil.getConnection()) {
-            System.out.println("Connection established successfully!");
+        System.out.println("Hibernate App Started");
 
-            create_table(con, "create_table");
-            List<Object> params = Arrays.asList(
-                    "Digital Forensic"
-            );
-            insert_data(con, "insert_data_courses", params);
-            fetch_record(con, "fetch_record_courses");
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Transaction tx = session.beginTransaction();
 
-        } catch (SQLException e) {
-            System.err.println("Failed to establish connection: " + e.getMessage());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            Student st = new Student("Hammad", "hammad@gmail.com", 20);
+            session.save(st);
+
+            tx.commit();
+
+            List<Course> courses = session.createQuery("from Course", Course.class).list();
+            for (Course c : courses) {
+                System.out.println(c.getName());
+            }
+
+            List<Student> students = session.createQuery("from Student", Student.class).list();
+            for (Student s : students) {
+                System.out.println(s.getUserName());
+            }
+
+            System.out.println("Student saved with ID: " + st.getId());
         }
     }
 }
