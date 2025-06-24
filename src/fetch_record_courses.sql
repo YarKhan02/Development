@@ -1,0 +1,1 @@
+SELECT id, course_name FROM courses;

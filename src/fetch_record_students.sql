@@ -1,0 +1,1 @@
+SELECT id, user_name, email, age FROM students;
