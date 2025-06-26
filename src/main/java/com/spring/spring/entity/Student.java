@@ -1,6 +1,11 @@
 package com.spring.spring.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,14 +17,19 @@ public class Student {
     private int id;
 
     @Column(name = "user_name", nullable = false, length = 100)
+    @NotBlank(message = "Username is required")
+    @Size(max = 100, message = "Username can't exceed 100 characters")
     private String userName;
 
     @Column(nullable = true, unique = true, length = 100)
+    @Email(message = "Invalid email format")
+    @Size(max = 100, message = "Email can't exceed 100 characters")
     private String email;
 
+    @Min(value = 15, message = "Age must be at least 15")
     private Integer age;
 
-    @Column(name = "enrolled_date", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @Column(name = "enrolled_date", updatable = false)
     private LocalDateTime enrolledDate;
 
     public Student() {}
