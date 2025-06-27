@@ -3,7 +3,11 @@ package com.spring.spring.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "courses")
 public class Course {
@@ -15,17 +19,13 @@ public class Course {
     @Column(nullable = false, length = 100)
     @NotBlank(message = "Course name is required")
     @Size(max = 100, message = "Course name can't exceed 100 characters")
-    private String course_name;
+    private String courseName;
 
     public Course() {}
 
-    public Course(String name) {
-        this.course_name = name;
+    public Course(int id, String courseName) {
+        this.id = id;
+        this.courseName = courseName;
     }
 
-    // Getters and setters
-    public int getId() { return id; }
-    public String getName() { return course_name; }
-    public void setId(int id) { this.id = id; }
-    public void setName(String name) { this.course_name = name; }
 }

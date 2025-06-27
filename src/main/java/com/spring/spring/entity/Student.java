@@ -5,9 +5,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "students")
 public class Student {
@@ -21,7 +25,7 @@ public class Student {
     @Size(max = 100, message = "Username can't exceed 100 characters")
     private String userName;
 
-    @Column(nullable = true, unique = true, length = 100)
+    @Column(unique = true, length = 100)
     @Email(message = "Invalid email format")
     @Size(max = 100, message = "Email can't exceed 100 characters")
     private String email;
@@ -32,49 +36,15 @@ public class Student {
     @Column(name = "enrolled_date", updatable = false)
     private LocalDateTime enrolledDate;
 
-    public Student() {}
+    public Student() {
+        // No-args constructor
+    }
 
-    public Student(String userName, String email, Integer age) {
+    public Student(int id, String userName, String email, Integer age, LocalDateTime enrolledDate) {
+        this.id = id;
         this.userName = userName;
         this.email = email;
         this.age = age;
-    }
-
-    // Getters and Setters
-
-    public int getId() {
-        return id;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public LocalDateTime getEnrolledDate() {
-        return enrolledDate;
-    }
-
-    public void setEnrolledDate(LocalDateTime enrolledDate) {
         this.enrolledDate = enrolledDate;
     }
 
