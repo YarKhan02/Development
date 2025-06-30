@@ -1,0 +1,78 @@
+package com.spring.spring.service;
+
+import com.spring.spring.dto.ArtPieceDTO;
+import com.spring.spring.entity.ArtPiece;
+import com.spring.spring.entity.Artist;
+import com.spring.spring.mapper.ArtPieceMapper;
+import com.spring.spring.repository.ArtPieceRepository;
+
+import com.spring.spring.repository.ArtistRepository;
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ArtPieceService {
+
+    private final ArtPieceRepository artPieceRepository;
+    private final ArtistRepository artistRepository;
+
+    @Autowired
+    public ArtPieceService(ArtPieceRepository artPieceRepository, ArtistRepository artistRepository) {
+        this.artPieceRepository = artPieceRepository;
+        this.artistRepository = artistRepository;
+    }
+
+    // Get all courses as DTOs
+    public List<ArtPieceDTO> getAllArtPieces() {
+        return artPieceRepository.findAll()
+                .stream()
+                .map(ArtPieceMapper::toDTO)
+                .toList();
+    }
+
+    // Get a course by ID as DTO
+    public Optional<ArtPieceDTO> getArtPieceById(int id) {
+        return artPieceRepository.findById(id)
+                .map(ArtPieceMapper::toDTO);
+    }
+
+    // Get all art pieces by artist ID as DTOs
+    public List<ArtPieceDTO> getArtPiecesByArtistId(int artistId) {
+        return artPieceRepository.findByArtistId(artistId)
+                .stream()
+                .map(ArtPieceMapper::toDTO)
+                .toList();
+    }
+
+    // Create a new course and return as DTO
+    public ArtPieceDTO createArtPiece(ArtPieceDTO artPieceDTO) {
+        ArtPiece artPiece = ArtPieceMapper.toEntity(artPieceDTO);
+        ArtPiece saved = artPieceRepository.save(artPiece);
+        return ArtPieceMapper.toDTO(saved);
+    }
+
+    // Update an existing artPiece and return as DTO if found
+    public Optional<ArtPieceDTO> updateArtPiece(int id, ArtPieceDTO artPieceDTO) {
+        return artPieceRepository.findById(id)
+                .map(existingArtPiece -> {
+                    ArtPieceMapper.updateEntity(existingArtPiece, artPieceDTO);
+                    Artist artist = artistRepository.findById(existingArtPiece.getArtist().getId())
+                            .orElseThrow(() -> new EntityNotFoundException("Artist not found for ID: " + existingArtPiece.getArtist().getId()));
+                    ArtPiece saved = artPieceRepository.save(existingArtPiece);
+                    return ArtPieceMapper.toDTO(saved);
+                });
+    }
+
+    // Delete a course by ID, return true if deleted
+    public boolean deleteArtPiece(int id) {
+        if (artPieceRepository.existsById(id)) {
+            artPieceRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+}
