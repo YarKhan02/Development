@@ -5,15 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtCollectionDTO {
+public class SimpleArtPieceDTO {
     private int id;
     private String title;
-    private String curatorName;
-    private List<Integer> artPieceIds;
+    private String description;
+    private double price;
+    private LocalDateTime uploadedAt;
+    private SimpleArtistDTO artist;
 }

@@ -1,8 +1,12 @@
 package com.spring.spring.mapper;
 
 import com.spring.spring.dto.ArtCollectionDTO;
+import com.spring.spring.dto.ArtCollectionDetailDTO;
+import com.spring.spring.dto.SimpleArtPieceDTO;
+import com.spring.spring.dto.SimpleArtistDTO;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.ArtCollection;
+
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -23,6 +27,36 @@ public class ArtCollectionMapper {
         );
     }
 
+    // Converts ArtPiece entity to a simple DTO
+    // This is used in ArtCollectionDetailDTO to avoid circular references
+    private SimpleArtPieceDTO toSimpleArtPieceDTO(ArtPiece artPiece) {
+        return new SimpleArtPieceDTO(
+                artPiece.getId(),
+                artPiece.getTitle(),
+                artPiece.getDescription(),
+                artPiece.getPrice().doubleValue(),
+                artPiece.getUploadedAt(),
+                new SimpleArtistDTO(
+                        artPiece.getArtist().getId(),
+                        artPiece.getArtist().getName(),
+                        artPiece.getArtist().getBio()
+                )
+        );
+    }
+
+    // Converts ArtCollection entity to detailed DTO
+    // This includes the full list of ArtPieces
+    public ArtCollectionDetailDTO toDetailDTO(ArtCollection collection) {
+        return new ArtCollectionDetailDTO(
+                collection.getId(),
+                collection.getTitle(),
+                collection.getCuratorName(),
+                collection.getArtPieces().stream()
+                        .map(this::toSimpleArtPieceDTO)
+                        .collect(Collectors.toList())
+        );
+    }
+
     // Converts DTO to ArtCollection entity
     public ArtCollection toEntity(ArtCollectionDTO dto) {
         ArtCollection col = new ArtCollection();
@@ -38,6 +72,5 @@ public class ArtCollectionMapper {
         if (col == null || dto == null) return;
         if (dto.getTitle() != null) col.setTitle(dto.getTitle());
         if (dto.getCuratorName() != null) col.setCuratorName(dto.getCuratorName());
-        col.setArtPieces(null); // Should be set externally after fetching
     }
 }

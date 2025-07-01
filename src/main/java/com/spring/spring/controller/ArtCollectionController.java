@@ -1,7 +1,9 @@
 package com.spring.spring.controller;
 
 import com.spring.spring.dto.ArtCollectionDTO;
+import com.spring.spring.dto.ArtCollectionDetailDTO;
 import com.spring.spring.service.ArtCollectionService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ public class ArtCollectionController {
 
     // --- GET all art collections ---
     @GetMapping
-    public List<ArtCollectionDTO> getAllCollections() {
+    public List<ArtCollectionDetailDTO> getAllCollections() {
         return artCollectionService.getAllCollections();
     }
 
@@ -36,15 +38,18 @@ public class ArtCollectionController {
 
     // --- POST create art collection ---
     @PostMapping
-    public ResponseEntity<ArtCollectionDTO> createCollection(@RequestBody ArtCollectionDTO dto) {
-        ArtCollectionDTO created = artCollectionService.createCollection(dto);
-        return ResponseEntity.ok(null);
+    public ResponseEntity<ArtCollectionDetailDTO> createCollection(@RequestBody ArtCollectionDTO dto) {
+        ArtCollectionDetailDTO created = artCollectionService.createCollection(dto);
+        return ResponseEntity.ok(created);
     }
 
     // --- PUT update art collection ---
     @PutMapping("/{id}")
     public ResponseEntity<ArtCollectionDTO> updateCollection(@PathVariable int id, @RequestBody ArtCollectionDTO dto) {
         ArtCollectionDTO updated = artCollectionService.updateCollection(id, dto);
+        if (updated != null) {
+            return ResponseEntity.ok(updated);
+        }
         return ResponseEntity.notFound().build();
     }
 

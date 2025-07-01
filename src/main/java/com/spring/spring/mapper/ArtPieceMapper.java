@@ -34,7 +34,7 @@ public class ArtPieceMapper {
         art.setUploadedAt(dto.getUploadedAt());
 
         // Placeholders for artist and collections
-        art.setArtist(new Artist(dto.getArtistId(), null, null, null));
+        art.setArtist(new Artist(dto.getArtistId(), null, null, null, null));
         art.setArtCollections(new HashSet<>()); // Actual objects should be fetched elsewhere
         return art;
     }

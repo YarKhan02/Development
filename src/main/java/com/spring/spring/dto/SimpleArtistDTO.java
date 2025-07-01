@@ -5,16 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtistDTO {
+public class SimpleArtistDTO {
     private int id;
     private String name;
     private String bio;
-    private ProfileDTO profile;
-    private List<Integer> artPieceIds; // only reference ArtPiece IDs
 }

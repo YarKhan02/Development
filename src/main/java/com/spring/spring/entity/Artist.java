@@ -25,6 +25,9 @@ public class Artist {
     @Column(length = 1000)
     private String bio;
 
+    @OneToOne(mappedBy = "artist", cascade = CascadeType.ALL)
+    private ArtistProfile profile;
+
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArtPiece> artPieces;
 }

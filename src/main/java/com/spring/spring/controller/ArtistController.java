@@ -2,6 +2,7 @@ package com.spring.spring.controller;
 
 import com.spring.spring.dto.ArtistDTO;
 
+import com.spring.spring.entity.Artist;
 import com.spring.spring.service.ArtistService;
 import jakarta.validation.Valid;
 
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/artist")
@@ -34,9 +36,12 @@ public class ArtistController {
     // --- GET artist by ID ---
     @GetMapping("/{id}")
     public ResponseEntity<ArtistDTO> getArtistById(@PathVariable int id) {
-        return artistService.getArtistById(id)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        ArtistDTO artist = artistService.getArtistById(id);
+        if (artist != null) {
+            return ResponseEntity.ok(artist);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // --- POST create artist ---
@@ -49,11 +54,13 @@ public class ArtistController {
     // --- PUT update artist ---
     @PutMapping("/{id}")
     public ResponseEntity<?> updateArtist(@PathVariable int id, @Valid @RequestBody ArtistDTO artistDTO) {
-        return artistService.updateArtist(id, artistDTO)
-                .<ResponseEntity<?>>map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity
-                        .status(HttpStatus.NOT_FOUND)
-                        .body("Artist with ID " + id + " not found."));
+        ArtistDTO updated = artistService.updateArtist(id, artistDTO);
+        if (updated != null) {
+            return ResponseEntity.ok(updated);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Artist with ID " + id + " not found.");
+        }
     }
 
     // --- DELETE artist ---

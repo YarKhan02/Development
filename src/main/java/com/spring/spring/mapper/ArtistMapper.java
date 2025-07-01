@@ -1,11 +1,17 @@
 package com.spring.spring.mapper;
 
 import com.spring.spring.dto.ArtistDTO;
+import com.spring.spring.dto.ProfileDTO;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.Artist;
+import com.spring.spring.entity.ArtistProfile;
+import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+
+@Component
 public class ArtistMapper {
 
     public static ArtistDTO toDTO(Artist artist) {
@@ -13,11 +19,19 @@ public class ArtistMapper {
                 artist.getId(),
                 artist.getName(),
                 artist.getBio(),
-                artist.getArtPieces()
+                toProfileDTO(artist.getProfile()),
+                artist.getArtPieces() == null
+                        ? emptyList()
+                        : artist.getArtPieces()
                         .stream()
                         .map(ArtPiece::getId)
                         .collect(Collectors.toList())
         );
+    }
+
+    private static ProfileDTO toProfileDTO(ArtistProfile profile) {
+        if (profile == null) return null;
+        return new ProfileDTO(profile.getWebsite());
     }
 
     public static Artist toEntity(ArtistDTO dto) {
@@ -25,6 +39,12 @@ public class ArtistMapper {
         artist.setId(dto.getId());
         artist.setName(dto.getName());
         artist.setBio(dto.getBio());
+        if (dto.getProfile() != null) {
+            ArtistProfile profile = new ArtistProfile();
+            profile.setWebsite(dto.getProfile().getWebsite());
+            artist.setProfile(profile);
+            profile.setArtist(artist);
+        }
         return artist;
     }
 
