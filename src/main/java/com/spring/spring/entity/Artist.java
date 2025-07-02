@@ -25,7 +25,8 @@ public class Artist {
     @Column(length = 1000)
     private String bio;
 
-    @OneToOne(mappedBy = "artist", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id")
     private ArtistProfile profile;
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)

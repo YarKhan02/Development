@@ -2,7 +2,10 @@ package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtistDTO;
 import com.spring.spring.entity.Artist;
+import com.spring.spring.entity.ArtistProfile;
+import com.spring.spring.exception.ResourceNotFoundException;
 import com.spring.spring.mapper.ArtistMapper;
+import com.spring.spring.repository.ArtistProfileRepository;
 import com.spring.spring.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +18,12 @@ import java.util.stream.Collectors;
 public class ArtistImpl implements ArtistService {
 
     private final ArtistRepository artistRepository;
+    private final ArtistProfileRepository artistProfileRepository;
 
     @Autowired
-    public ArtistImpl(ArtistRepository artistRepository) {
+    public ArtistImpl(ArtistRepository artistRepository, ArtistProfileRepository artistProfileRepository) {
         this.artistRepository = artistRepository;
+        this.artistProfileRepository = artistProfileRepository;
     }
 
     @Override
@@ -35,9 +40,17 @@ public class ArtistImpl implements ArtistService {
                 .orElse(null);
     }
 
+    // POST create artist
     @Override
     public ArtistDTO createArtist(ArtistDTO dto) {
-        Artist artist = ArtistMapper.toEntity(dto);
+        if (dto.getProfileId() != null) {
+            ArtistProfile profile = artistProfileRepository.findById(dto.getProfileId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Artist Profile not found with ID: " + dto.getProfileId()));
+            Artist artist = ArtistMapper.toEntity(dto, profile);
+            Artist saved = artistRepository.save(artist);
+            return ArtistMapper.toDTO(saved);
+        }
+        Artist artist = ArtistMapper.toEntity(dto, null);
         Artist saved = artistRepository.save(artist);
         return ArtistMapper.toDTO(saved);
     }

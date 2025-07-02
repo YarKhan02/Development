@@ -1,6 +1,5 @@
-package com.spring.spring.entity;
+package com.spring.spring.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,13 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "artistProfile")
-public class ArtistProfile {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ArtistProfileDTO {
     private int id;
-
     private String website;
 }

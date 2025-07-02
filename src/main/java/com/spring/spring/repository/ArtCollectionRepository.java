@@ -11,4 +11,5 @@ import java.util.List;
 public interface ArtCollectionRepository extends JpaRepository<ArtCollection, Integer> {
     @Query("SELECT DISTINCT ac FROM ArtCollection ac LEFT JOIN FETCH ac.artPieces")
     List<ArtCollection> findAllWithArtPieces();
+
 }
