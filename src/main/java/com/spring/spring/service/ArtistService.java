@@ -12,6 +12,8 @@ public interface ArtistService {
 
     ArtistDTO createArtist(ArtistDTO dto);
 
+    List<ArtistDTO> getArtistByStatus(ArtistDTO dto);
+
     ArtistDTO updateArtist(int id, ArtistDTO dto);
 
     boolean deleteArtist(int id);

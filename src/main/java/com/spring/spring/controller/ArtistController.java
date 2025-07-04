@@ -44,6 +44,16 @@ public class ArtistController {
         }
     }
 
+    @PostMapping("/status")
+    public ResponseEntity<List<ArtistDTO>> getArtistByStatus(@RequestBody ArtistDTO artistDTO) {
+        List<ArtistDTO> artist = artistService.getArtistByStatus(artistDTO);
+        if (artist.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(artist);
+        }
+    }
+
     // --- POST create artist ---
     @PostMapping
     public ResponseEntity<ArtistDTO> createArtist(@Valid @RequestBody ArtistDTO artistDTO) {

@@ -1,7 +1,9 @@
 package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtPieceDTO;
+import com.spring.spring.dto.ArtPieceWithArtistDTO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +13,9 @@ public interface ArtPieceService {
 
     Optional<ArtPieceDTO> getArtPieceById(int id);
 
-    List<ArtPieceDTO> getArtPiecesByArtistId(int artistId);
+    List<ArtPieceWithArtistDTO> getArtPiecesByArtistId(int artistId);
+
+    List<ArtPieceDTO> getArtPiecesByPrice(ArtPieceDTO price);
 
     ArtPieceDTO createArtPiece(ArtPieceDTO artPieceDTO);
 

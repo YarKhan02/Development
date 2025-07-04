@@ -1,6 +1,7 @@
 package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtPieceDTO;
+import com.spring.spring.dto.ArtPieceWithArtistDTO;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.Artist;
 import com.spring.spring.mapper.ArtPieceMapper;
@@ -10,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,14 +42,22 @@ public class ArtPieceImpl implements ArtPieceService {
     }
 
     // Get all art pieces by artist ID as DTOs
-    public List<ArtPieceDTO> getArtPiecesByArtistId(int artistId) {
+    public List<ArtPieceWithArtistDTO> getArtPiecesByArtistId(int artistId) {
         return artPieceRepository.findByArtistId(artistId)
+                .stream()
+                .map(ArtPieceMapper::toArtPieceWithArtist)
+                .toList();
+    }
+
+    // Get all art pieces by price as DTOs
+    public List<ArtPieceDTO> getArtPiecesByPrice(ArtPieceDTO price) {
+        return artPieceRepository.findByPrice(price.getPrice())
                 .stream()
                 .map(ArtPieceMapper::toDTO)
                 .toList();
     }
 
-    // Create a new course and return as DTO
+    // Create a new artPiece and return as DTO
     public ArtPieceDTO createArtPiece(ArtPieceDTO artPieceDTO) {
         ArtPiece artPiece = ArtPieceMapper.toEntity(artPieceDTO);
         ArtPiece saved = artPieceRepository.save(artPiece);

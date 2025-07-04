@@ -2,6 +2,7 @@ package com.spring.spring.controller;
 
 import com.spring.spring.dto.ArtCollectionDTO;
 import com.spring.spring.dto.ArtCollectionDetailDTO;
+import com.spring.spring.dto.ArtPieceCollectionsDTO;
 import com.spring.spring.service.ArtCollectionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,23 @@ public class ArtCollectionController {
 
     // --- GET art collection by ID ---
     @GetMapping("/{id}")
-    public ResponseEntity<ArtCollectionDTO> getCollectionById(@PathVariable int id) {
-        ArtCollectionDTO dto = artCollectionService.getCollectionById(id);
+    public ResponseEntity<ArtCollectionDetailDTO> getCollectionById(@PathVariable int id) {
+        ArtCollectionDetailDTO dto = artCollectionService.getCollectionById(id);
+        if (dto != null) {
+            return ResponseEntity.ok(dto);
+        }
         return ResponseEntity.notFound().build();
+    }
+
+    // --- GET all art collections where an art piece belongs to ---
+    @GetMapping("/art/{id}")
+    public ResponseEntity<ArtPieceCollectionsDTO> getCollectionsByArtPiece(@PathVariable int id) {
+        ArtPieceCollectionsDTO dto = artCollectionService.getCollectionsByArtPiece(id);
+        if (dto != null) {
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // --- POST create art collection ---

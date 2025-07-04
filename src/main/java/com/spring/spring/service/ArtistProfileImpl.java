@@ -4,7 +4,6 @@ import com.spring.spring.dto.ArtistDTO;
 import com.spring.spring.dto.ArtistProfileDTO;
 import com.spring.spring.entity.Artist;
 import com.spring.spring.entity.ArtistProfile;
-import com.spring.spring.exception.ResourceNotFoundException;
 import com.spring.spring.mapper.ArtistMapper;
 import com.spring.spring.mapper.ArtistProfileMapper;
 import com.spring.spring.repository.ArtistProfileRepository;
@@ -19,13 +18,11 @@ import java.util.stream.Collectors;
 public class ArtistProfileImpl implements ArtistProfileService {
     private final ArtistProfileRepository artistProfileRepository;
     private final ArtistProfileMapper artistProfileMapper;
-    private final ArtistMapper artistMapper;
     private final ArtistRepository artistRepository;
 
-    public ArtistProfileImpl(ArtistProfileRepository artistProfileRepository, ArtistProfileMapper artistProfileMapper, ArtistRepository artistRepository, ArtistMapper artistMapper) {
+    public ArtistProfileImpl(ArtistProfileRepository artistProfileRepository, ArtistProfileMapper artistProfileMapper, ArtistRepository artistRepository) {
         this.artistProfileRepository = artistProfileRepository;
         this.artistProfileMapper = artistProfileMapper;
-        this.artistMapper = artistMapper;
         this.artistRepository = artistRepository;
     }
 
@@ -41,7 +38,7 @@ public class ArtistProfileImpl implements ArtistProfileService {
         Optional<ArtistProfile> artistProfile = artistProfileRepository.findById(id);
         if (artistProfile.isPresent()) {
             Optional<Artist> artist = artistRepository.findByProfileId(id);
-            return artistMapper.toDTO(artist.get());
+            return ArtistMapper.toDTO(artist.get());
         } else {
             return null;
         }

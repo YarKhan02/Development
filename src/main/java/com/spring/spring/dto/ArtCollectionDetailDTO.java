@@ -2,6 +2,7 @@ package com.spring.spring.dto;
 
 import com.spring.spring.entity.ArtPiece;
 
+import com.spring.spring.enums.CollectionCategory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AllArgsConstructor;
@@ -19,4 +20,5 @@ public class ArtCollectionDetailDTO {
     private String title;
     private String curatorName;
     private List<SimpleArtPieceDTO> artPieces;
+    private CollectionCategory category;
 }

@@ -1,5 +1,6 @@
 package com.spring.spring.entity;
 
+import com.spring.spring.enums.CollectionCategory;
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -14,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ArtCollection")
+@Table(name = "art_collection")
 public class ArtCollection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,4 +29,8 @@ public class ArtCollection {
 
     @ManyToMany(mappedBy = "artCollections")
     private Set<ArtPiece> artPieces;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CollectionCategory category;
 }

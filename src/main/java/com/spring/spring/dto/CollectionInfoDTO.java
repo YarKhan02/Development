@@ -6,16 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtCollectionDTO {
+public class CollectionInfoDTO {
     private int id;
     private String title;
     private String curatorName;
-    private List<Integer> artPieceIds;
     private CollectionCategory category;
 }

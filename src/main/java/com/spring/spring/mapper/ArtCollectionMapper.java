@@ -1,9 +1,6 @@
 package com.spring.spring.mapper;
 
-import com.spring.spring.dto.ArtCollectionDTO;
-import com.spring.spring.dto.ArtCollectionDetailDTO;
-import com.spring.spring.dto.SimpleArtPieceDTO;
-import com.spring.spring.dto.SimpleArtistDTO;
+import com.spring.spring.dto.*;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.ArtCollection;
 
@@ -23,7 +20,8 @@ public class ArtCollectionMapper {
                 collection.getArtPieces()
                         .stream()
                         .map(ArtPiece::getId)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                collection.getCategory()
         );
     }
 
@@ -53,7 +51,25 @@ public class ArtCollectionMapper {
                 collection.getCuratorName(),
                 collection.getArtPieces().stream()
                         .map(this::toSimpleArtPieceDTO)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                collection.getCategory()
+        );
+    }
+
+    public ArtPieceCollectionsDTO toArtPieceCollectionsDTO(ArtPiece artPiece) {
+        return new ArtPieceCollectionsDTO(
+                artPiece.getId(),
+                artPiece.getTitle(),
+                artPiece.getDescription(),
+                artPiece.getPrice(),
+                artPiece.getArtCollections()
+                        .stream()
+                        .map(collection -> new CollectionInfoDTO(
+                                collection.getId(),
+                                collection.getTitle(),
+                                collection.getCuratorName(),
+                                collection.getCategory()))
+                        .collect(Collectors.toSet())
         );
     }
 
@@ -64,6 +80,7 @@ public class ArtCollectionMapper {
         col.setTitle(dto.getTitle());
         col.setCuratorName(dto.getCuratorName());
         col.setArtPieces(null); // Should be set externally after fetching
+        col.setCategory(dto.getCategory());
         return col;
     }
 

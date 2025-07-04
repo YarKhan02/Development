@@ -26,6 +26,7 @@ public class ArtistImpl implements ArtistService {
         this.artistProfileRepository = artistProfileRepository;
     }
 
+    // GET all artists as DTOs
     @Override
     public List<ArtistDTO> getAllArtists() {
         return artistRepository.findAll().stream()
@@ -33,6 +34,7 @@ public class ArtistImpl implements ArtistService {
                 .collect(Collectors.toList());
     }
 
+    // GET artist by ID as DTO
     @Override
     public ArtistDTO getArtistById(int id) {
         return artistRepository.findById(id)
@@ -55,11 +57,26 @@ public class ArtistImpl implements ArtistService {
         return ArtistMapper.toDTO(saved);
     }
 
+    // GET artist by status
+    @Override
+    public List<ArtistDTO> getArtistByStatus(ArtistDTO dto) {
+        return artistRepository.findByStatus(dto.getStatus()).stream()
+                .map(ArtistMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
     @Override
     public ArtistDTO updateArtist(int id, ArtistDTO dto) {
         Optional<Artist> optionalArtist = artistRepository.findById(id);
         if (optionalArtist.isPresent()) {
             Artist artist = optionalArtist.get();
+            Optional<ArtistProfile> profile = artistProfileRepository.findById(dto.getProfileId());
+            if (profile.isPresent()) {
+                artist.setProfile(profile.get());
+            } else {
+                artist.setProfile(null);
+            }
             ArtistMapper.updateEntity(artist, dto);
             Artist updated = artistRepository.save(artist);
             return ArtistMapper.toDTO(updated);

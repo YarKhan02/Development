@@ -1,5 +1,6 @@
 package com.spring.spring.entity;
 
+import com.spring.spring.enums.ArtistStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "Artist")
+@Table(name = "artist")
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +32,8 @@ public class Artist {
 
     @OneToMany(mappedBy = "artist", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ArtPiece> artPieces;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ArtistStatus status;
 }

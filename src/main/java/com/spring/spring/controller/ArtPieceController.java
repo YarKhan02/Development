@@ -1,6 +1,7 @@
 package com.spring.spring.controller;
 
 import com.spring.spring.dto.ArtPieceDTO;
+import com.spring.spring.dto.ArtPieceWithArtistDTO;
 import com.spring.spring.service.ArtPieceService;
 
 import jakarta.validation.Valid;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -41,8 +43,18 @@ public class ArtPieceController {
 
     // --- GET artPieces by artist ID ---
     @GetMapping("/artist/{artistId}")
-    public ResponseEntity<List<ArtPieceDTO>> getArtPiecesByArtistId(@PathVariable int artistId) {
-        List<ArtPieceDTO> artPieces = artPieceService.getArtPiecesByArtistId(artistId);
+    public ResponseEntity<List<ArtPieceWithArtistDTO>> getArtPiecesByArtistId(@PathVariable int artistId) {
+        List<ArtPieceWithArtistDTO> artPieces = artPieceService.getArtPiecesByArtistId(artistId);
+        if (artPieces.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(artPieces);
+    }
+
+    // --- GET artPieces By price ---
+    @PostMapping("/price")
+    public ResponseEntity<List<ArtPieceDTO>> getArtPiecesByPrice(@RequestBody ArtPieceDTO artPieceDTO) {
+        List<ArtPieceDTO> artPieces = artPieceService.getArtPiecesByPrice(artPieceDTO);
         if (artPieces.isEmpty()) {
             return ResponseEntity.notFound().build();
         }

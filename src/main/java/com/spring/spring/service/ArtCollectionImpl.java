@@ -2,9 +2,11 @@ package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtCollectionDTO;
 import com.spring.spring.dto.ArtCollectionDetailDTO;
+import com.spring.spring.dto.ArtPieceCollectionsDTO;
 import com.spring.spring.entity.ArtCollection;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.mapper.ArtCollectionMapper;
+import com.spring.spring.mapper.ArtPieceMapper;
 import com.spring.spring.repository.ArtCollectionRepository;
 import com.spring.spring.repository.ArtPieceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +40,17 @@ public class ArtCollectionImpl implements ArtCollectionService {
     }
 
     @Override
-    public ArtCollectionDTO getCollectionById(int id) {
+    public ArtCollectionDetailDTO getCollectionById(int id) {
         return artCollectionRepository.findById(id)
-                .map(artCollectionMapper::toDTO)
+                .map(artCollectionMapper::toDetailDTO)
                 .orElse(null);
+    }
+
+    @Override
+    public ArtPieceCollectionsDTO getCollectionsByArtPiece(int id) {
+        ArtPiece artPiece = artPieceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("ArtPiece not found with id: " + id));
+        return artCollectionMapper.toArtPieceCollectionsDTO(artPiece);
     }
 
     @Override

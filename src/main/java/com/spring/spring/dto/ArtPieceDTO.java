@@ -1,5 +1,6 @@
 package com.spring.spring.dto;
 
+import com.spring.spring.enums.ArtPieceType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,5 @@ public class ArtPieceDTO {
 
     private int artistId;                // Reference artist
     private Set<Integer> collectionIds; // Reference collections
+    private ArtPieceType type;                // Type of art piece (e.g., PAINTING, SCULPTURE)
 }

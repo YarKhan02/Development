@@ -25,7 +25,8 @@ public class ArtistMapper {
                         : artist.getArtPieces()
                         .stream()
                         .map(ArtPiece::getId)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                artist.getStatus()
         );
     }
 
@@ -42,6 +43,7 @@ public class ArtistMapper {
         if (dto.getProfileId() != null) {
             artist.setProfile(existingProfile);
         }
+        artist.setStatus(dto.getStatus());
         return artist;
     }
 

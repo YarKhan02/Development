@@ -1,6 +1,7 @@
 package com.spring.spring.mapper;
 
 import com.spring.spring.dto.ArtPieceDTO;
+import com.spring.spring.dto.ArtPieceWithArtistDTO;
 import com.spring.spring.entity.ArtCollection;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.Artist;
@@ -21,7 +22,19 @@ public class ArtPieceMapper {
                 art.getArtCollections()
                         .stream()
                         .map(ArtCollection::getId)
-                        .collect(Collectors.toSet())
+                        .collect(Collectors.toSet()),
+                art.getType()
+        );
+    }
+
+    public static ArtPieceWithArtistDTO toArtPieceWithArtist(ArtPiece art) {
+        return new ArtPieceWithArtistDTO(
+                art.getId(),
+                art.getTitle(),
+                art.getDescription(),
+                art.getType(),
+                art.getArtist().getName(),
+                art.getArtist().getBio()
         );
     }
 
@@ -34,7 +47,7 @@ public class ArtPieceMapper {
         art.setUploadedAt(dto.getUploadedAt());
 
         // Placeholders for artist and collections
-        art.setArtist(new Artist(dto.getArtistId(), null, null, null, null));
+        art.setArtist(new Artist(dto.getArtistId(), null, null, null, null, null));
         art.setArtCollections(new HashSet<>()); // Actual objects should be fetched elsewhere
         return art;
     }

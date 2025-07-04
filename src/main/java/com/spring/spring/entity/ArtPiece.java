@@ -1,5 +1,6 @@
 package com.spring.spring.entity;
 
+import com.spring.spring.enums.ArtPieceType;
 import jakarta.persistence.*;
 
 import lombok.Getter;
@@ -16,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "ArtPiece")
+@Table(name = "art_piece")
 public class ArtPiece {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,4 +51,8 @@ public class ArtPiece {
             inverseJoinColumns = @JoinColumn(name = "collection_id")
     )
     private Set<ArtCollection> artCollections;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ArtPieceType type;
 }

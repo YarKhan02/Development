@@ -3,6 +3,7 @@ package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtCollectionDTO;
 import com.spring.spring.dto.ArtCollectionDetailDTO;
+import com.spring.spring.dto.ArtPieceCollectionsDTO;
 
 import java.util.List;
 
@@ -10,7 +11,9 @@ public interface ArtCollectionService {
 
     List<ArtCollectionDetailDTO> getAllCollections();
 
-    ArtCollectionDTO getCollectionById(int id);
+    ArtCollectionDetailDTO getCollectionById(int id);
+
+    ArtPieceCollectionsDTO getCollectionsByArtPiece(int id);
 
     ArtCollectionDetailDTO createCollection(ArtCollectionDTO dto);
 

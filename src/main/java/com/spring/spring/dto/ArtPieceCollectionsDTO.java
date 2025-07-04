@@ -1,21 +1,21 @@
 package com.spring.spring.dto;
 
-import com.spring.spring.enums.CollectionCategory;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtCollectionDTO {
+public class ArtPieceCollectionsDTO {
     private int id;
     private String title;
-    private String curatorName;
-    private List<Integer> artPieceIds;
-    private CollectionCategory category;
+    private String description;
+    private BigDecimal price;
+    private Set<CollectionInfoDTO> collections;
 }
