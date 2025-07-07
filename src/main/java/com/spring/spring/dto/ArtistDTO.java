@@ -1,5 +1,6 @@
 package com.spring.spring.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.spring.spring.enums.ArtistStatus;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class ArtistDTO {
     private Integer profileId;
     private ProfileDTO profile;
     private List<Integer> artPieceIds;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private ArtistStatus status;
 
     public ArtistDTO(int id, String name, String bio, ProfileDTO profile, List<Integer> artPieceIds, ArtistStatus status) {
@@ -30,5 +32,13 @@ public class ArtistDTO {
         this.profile = profile;
         this.artPieceIds = artPieceIds;
         this.status = status;
+    }
+
+    public ArtistDTO(int id, String name, String bio, ProfileDTO profile, List<Integer> artPieceIds) {
+        this.id = id;
+        this.name = name;
+        this.bio = bio;
+        this.profile = profile;
+        this.artPieceIds = artPieceIds;
     }
 }

@@ -2,6 +2,7 @@ package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtPieceDTO;
 import com.spring.spring.dto.ArtPieceWithArtistDTO;
+import com.spring.spring.projections.ArtPieceProjection;
 
 import java.math.BigDecimal;
 import java.util.List;

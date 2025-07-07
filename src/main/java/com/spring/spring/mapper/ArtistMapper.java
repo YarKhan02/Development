@@ -5,6 +5,9 @@ import com.spring.spring.dto.ProfileDTO;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.Artist;
 import com.spring.spring.entity.ArtistProfile;
+import com.spring.spring.projections.ArtPieceIdProjection;
+import com.spring.spring.projections.DetailArtistProjection;
+import com.spring.spring.projections.ProfileProjection;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
@@ -31,6 +34,26 @@ public class ArtistMapper {
     }
 
     private static ProfileDTO toProfileDTO(ArtistProfile profile) {
+        if (profile == null) return null;
+        return new ProfileDTO(profile.getWebsite());
+    }
+
+    public static ArtistDTO fromProjection(DetailArtistProjection artist) {
+        return new ArtistDTO(
+                artist.getId(),
+                artist.getName(),
+                artist.getBio(),
+                toProfileDTO(artist.getProfile()),
+                artist.getArtPieces() == null
+                        ? emptyList()
+                        : artist.getArtPieces()
+                        .stream()
+                        .map(ArtPieceIdProjection::getId)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    private static ProfileDTO toProfileDTO(ProfileProjection profile) {
         if (profile == null) return null;
         return new ProfileDTO(profile.getWebsite());
     }

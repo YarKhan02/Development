@@ -5,6 +5,7 @@ import com.spring.spring.dto.ArtPieceWithArtistDTO;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.Artist;
 import com.spring.spring.mapper.ArtPieceMapper;
+import com.spring.spring.projections.ArtPieceProjection;
 import com.spring.spring.repository.ArtPieceRepository;
 import com.spring.spring.repository.ArtistRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,25 +28,23 @@ public class ArtPieceImpl implements ArtPieceService {
         this.artistRepository = artistRepository;
     }
 
-    // Get all courses as DTOs
+    // Get all art pieces as DTOs
     public List<ArtPieceDTO> getAllArtPieces() {
-        return artPieceRepository.findAll()
-                .stream()
-                .map(ArtPieceMapper::toDTO)
-                .toList();
+        List<ArtPieceProjection> projections = artPieceRepository.findAllProjectedArtPieces();
+        return ArtPieceMapper.deduplicate(projections);
     }
 
-    // Get a course by ID as DTO
+    // Get an art piece by ID as DTO
     public Optional<ArtPieceDTO> getArtPieceById(int id) {
-        return artPieceRepository.findById(id)
-                .map(ArtPieceMapper::toDTO);
+        return artPieceRepository.findProjectedArtPieceById(id)
+                .map(ArtPieceMapper::fromProjection);
     }
 
     // Get all art pieces by artist ID as DTOs
     public List<ArtPieceWithArtistDTO> getArtPiecesByArtistId(int artistId) {
         return artPieceRepository.findByArtistId(artistId)
                 .stream()
-                .map(ArtPieceMapper::toArtPieceWithArtist)
+                .map(ArtPieceMapper::fromArtPieceWithArtistProjection)
                 .toList();
     }
 

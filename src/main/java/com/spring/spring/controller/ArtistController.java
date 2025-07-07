@@ -3,6 +3,7 @@ package com.spring.spring.controller;
 import com.spring.spring.dto.ArtistDTO;
 
 import com.spring.spring.entity.Artist;
+import com.spring.spring.projections.ArtistProjection;
 import com.spring.spring.service.ArtistService;
 import jakarta.validation.Valid;
 
@@ -29,7 +30,7 @@ public class ArtistController {
 
     // --- GET all artists ---
     @GetMapping
-    public ResponseEntity<List<ArtistDTO>> getAllArtists() {
+    public ResponseEntity<List<ArtistProjection>> getAllArtists() {
         return ResponseEntity.ok(artistService.getAllArtists());
     }
 
@@ -44,6 +45,7 @@ public class ArtistController {
         }
     }
 
+    // --- POST get artist by status ---
     @PostMapping("/status")
     public ResponseEntity<List<ArtistDTO>> getArtistByStatus(@RequestBody ArtistDTO artistDTO) {
         List<ArtistDTO> artist = artistService.getArtistByStatus(artistDTO);

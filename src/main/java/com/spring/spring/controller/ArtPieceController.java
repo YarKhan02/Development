@@ -2,6 +2,7 @@ package com.spring.spring.controller;
 
 import com.spring.spring.dto.ArtPieceDTO;
 import com.spring.spring.dto.ArtPieceWithArtistDTO;
+import com.spring.spring.projections.ArtPieceProjection;
 import com.spring.spring.service.ArtPieceService;
 
 import jakarta.validation.Valid;

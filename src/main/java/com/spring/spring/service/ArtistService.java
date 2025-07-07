@@ -1,12 +1,13 @@
 package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtistDTO;
+import com.spring.spring.projections.ArtistProjection;
 
 import java.util.List;
 
 public interface ArtistService {
 
-    List<ArtistDTO> getAllArtists();
+    List<ArtistProjection> getAllArtists();
 
     ArtistDTO getArtistById(int id);
 

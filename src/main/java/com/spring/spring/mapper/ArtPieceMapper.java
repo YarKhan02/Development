@@ -5,8 +5,11 @@ import com.spring.spring.dto.ArtPieceWithArtistDTO;
 import com.spring.spring.entity.ArtCollection;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.Artist;
+import com.spring.spring.projections.ArtPieceProjection;
+import com.spring.spring.projections.ArtPieceWithArtistProjection;
+import com.spring.spring.projections.CollectionIdProjection;
 
-import java.util.HashSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ArtPieceMapper {
@@ -17,7 +20,6 @@ public class ArtPieceMapper {
                 art.getTitle(),
                 art.getDescription(),
                 art.getPrice(),
-                art.getUploadedAt(),
                 art.getArtist().getId(),
                 art.getArtCollections()
                         .stream()
@@ -27,14 +29,54 @@ public class ArtPieceMapper {
         );
     }
 
-    public static ArtPieceWithArtistDTO toArtPieceWithArtist(ArtPiece art) {
+    public static ArtPieceDTO fromProjection(ArtPieceProjection projection) {
+        return new ArtPieceDTO(
+                projection.getId(),
+                projection.getTitle(),
+                projection.getDescription(),
+                projection.getPrice(),
+                projection.getArtistName(),
+                projection.getArtCollections()
+                        .stream()
+                        .map(CollectionIdProjection::getId)
+                        .collect(Collectors.toSet()),
+                projection.getType()
+        );
+    }
+
+    public static List<ArtPieceDTO> deduplicate(List<ArtPieceProjection> projections) {
+        Map<Integer, ArtPieceDTO> map = new LinkedHashMap<>();
+
+        for (ArtPieceProjection p : projections) {
+            map.computeIfAbsent(p.getId(), id -> new ArtPieceDTO(
+                    p.getId(),
+                    p.getTitle(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    p.getArtistName(),
+                    new HashSet<>(),
+                    p.getType()
+            ));
+
+            ArtPieceDTO dto = map.get(p.getId());
+            Set<Integer> collectionIds = p.getArtCollections()
+                    .stream()
+                    .map(CollectionIdProjection::getId)
+                    .collect(Collectors.toSet());
+            dto.getCollectionIds().addAll(collectionIds);
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
+    public static ArtPieceWithArtistDTO fromArtPieceWithArtistProjection(ArtPieceWithArtistProjection art) {
         return new ArtPieceWithArtistDTO(
                 art.getId(),
                 art.getTitle(),
                 art.getDescription(),
                 art.getType(),
-                art.getArtist().getName(),
-                art.getArtist().getBio()
+                art.getArtistName(),
+                art.getArtistBio()
         );
     }
 

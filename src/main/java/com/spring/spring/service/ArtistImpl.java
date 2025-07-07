@@ -5,6 +5,7 @@ import com.spring.spring.entity.Artist;
 import com.spring.spring.entity.ArtistProfile;
 import com.spring.spring.exception.ResourceNotFoundException;
 import com.spring.spring.mapper.ArtistMapper;
+import com.spring.spring.projections.ArtistProjection;
 import com.spring.spring.repository.ArtistProfileRepository;
 import com.spring.spring.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,17 +29,17 @@ public class ArtistImpl implements ArtistService {
 
     // GET all artists as DTOs
     @Override
-    public List<ArtistDTO> getAllArtists() {
-        return artistRepository.findAll().stream()
-                .map(ArtistMapper::toDTO)
-                .collect(Collectors.toList());
+    public List<ArtistProjection> getAllArtists() {
+        return artistRepository.findAllProjected().stream().toList();
+//                .map(ArtistMapper::toDTO)
+//                .collect(Collectors.toList());
     }
 
     // GET artist by ID as DTO
     @Override
     public ArtistDTO getArtistById(int id) {
-        return artistRepository.findById(id)
-                .map(ArtistMapper::toDTO)
+        return Optional.ofNullable(artistRepository.findProjectedById(id))
+                .map(ArtistMapper::fromProjection)
                 .orElse(null);
     }
 
@@ -66,6 +67,7 @@ public class ArtistImpl implements ArtistService {
     }
 
 
+    // PUT update artist
     @Override
     public ArtistDTO updateArtist(int id, ArtistDTO dto) {
         Optional<Artist> optionalArtist = artistRepository.findById(id);
@@ -84,6 +86,7 @@ public class ArtistImpl implements ArtistService {
         return null;
     }
 
+    // DELETE artist by ID
     @Override
     public boolean deleteArtist(int id) {
         if (artistRepository.existsById(id)) {
