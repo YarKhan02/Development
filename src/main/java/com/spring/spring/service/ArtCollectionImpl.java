@@ -3,6 +3,7 @@ package com.spring.spring.service;
 import com.spring.spring.dto.ArtCollectionDTO;
 import com.spring.spring.dto.ArtCollectionDetailDTO;
 import com.spring.spring.dto.ArtPieceCollectionsDTO;
+import com.spring.spring.dto.CollectionSearchDTO;
 import com.spring.spring.entity.ArtCollection;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.mapper.ArtCollectionMapper;
@@ -51,6 +52,19 @@ public class ArtCollectionImpl implements ArtCollectionService {
         ArtPiece artPiece = artPieceRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("ArtPiece not found with id: " + id));
         return artCollectionMapper.toArtPieceCollectionsDTO(artPiece);
+    }
+
+    @Override
+    public List<ArtCollectionDetailDTO> searchCollections(CollectionSearchDTO searchDTO) {
+        return artCollectionRepository.searchCollections(
+                searchDTO.getTitle(),
+                searchDTO.getCuratorName(),
+                searchDTO.getCategory(),
+                searchDTO.getArtPieceTitle(),
+                searchDTO.getArtistName()
+        ).stream()
+                .map(artCollectionMapper::toDetailDTO)
+                .collect(Collectors.toList());
     }
 
     @Override

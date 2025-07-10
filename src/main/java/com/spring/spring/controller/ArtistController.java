@@ -1,8 +1,7 @@
 package com.spring.spring.controller;
 
 import com.spring.spring.dto.ArtistDTO;
-
-import com.spring.spring.entity.Artist;
+import com.spring.spring.dto.ArtistSearchDTO;
 import com.spring.spring.projections.ArtistProjection;
 import com.spring.spring.service.ArtistService;
 import jakarta.validation.Valid;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/artist")
@@ -43,6 +41,12 @@ public class ArtistController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // --- GET artist by name search ---
+    @PostMapping("/search")
+    public ResponseEntity<List<ArtistProjection>> searchArtist(@RequestBody ArtistSearchDTO searchDTO) {
+        return ResponseEntity.ok(artistService.searchArtist(searchDTO));
     }
 
     // --- POST get artist by status ---

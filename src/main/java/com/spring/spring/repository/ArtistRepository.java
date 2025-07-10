@@ -23,4 +23,19 @@ public interface ArtistRepository extends JpaRepository<Artist, Integer> {
 
     @Query("SELECT a FROM Artist a LEFT JOIN FETCH a.profile LEFT JOIN FETCH a.artPieces WHERE a.id = :id")
     DetailArtistProjection findProjectedById(@Param("id") int id);
+
+    @Query("SELECT a.id AS id, a.name AS name, a.bio AS bio FROM Artist a WHERE LOWER(a.name) LIKE LOWER(CONCAT('%', :pattern, '%'))")
+    List<ArtistProjection> findNamesByNameStarting(@Param("pattern") String pattern);
+
+    @Query("SELECT a FROM Artist a WHERE " +
+            "(:id IS NULL OR a.id = :id) AND " +
+            "(:name IS NULL OR LOWER(a.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND " +
+            "(:bio IS NULL OR LOWER(a.bio) LIKE LOWER(CONCAT('%', :bio, '%'))) AND " +
+            "(:status IS NULL OR a.status = :status)")
+    List<ArtistProjection> searchArtists(
+            @Param("id") Integer id,
+            @Param("name") String name,
+            @Param("bio") String bio,
+            @Param("status") ArtistStatus status
+    );
 }

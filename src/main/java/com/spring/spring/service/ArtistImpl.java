@@ -1,6 +1,7 @@
 package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtistDTO;
+import com.spring.spring.dto.ArtistSearchDTO;
 import com.spring.spring.entity.Artist;
 import com.spring.spring.entity.ArtistProfile;
 import com.spring.spring.exception.ResourceNotFoundException;
@@ -31,8 +32,6 @@ public class ArtistImpl implements ArtistService {
     @Override
     public List<ArtistProjection> getAllArtists() {
         return artistRepository.findAllProjected().stream().toList();
-//                .map(ArtistMapper::toDTO)
-//                .collect(Collectors.toList());
     }
 
     // GET artist by ID as DTO
@@ -41,6 +40,19 @@ public class ArtistImpl implements ArtistService {
         return Optional.ofNullable(artistRepository.findProjectedById(id))
                 .map(ArtistMapper::fromProjection)
                 .orElse(null);
+    }
+
+    // GET artist-by-name search
+    @Override
+    public List<ArtistProjection> searchArtist(ArtistSearchDTO searchDTO) {
+        return artistRepository.searchArtists(
+                searchDTO.getId(),
+                searchDTO.getName(),
+                searchDTO.getBio(),
+                searchDTO.getStatus()
+                )
+                .stream()
+                .toList();
     }
 
     // POST create artist
@@ -65,7 +77,6 @@ public class ArtistImpl implements ArtistService {
                 .map(ArtistMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
 
     // PUT update artist
     @Override

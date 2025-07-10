@@ -3,6 +3,7 @@ package com.spring.spring.controller;
 import com.spring.spring.dto.ArtCollectionDTO;
 import com.spring.spring.dto.ArtCollectionDetailDTO;
 import com.spring.spring.dto.ArtPieceCollectionsDTO;
+import com.spring.spring.dto.CollectionSearchDTO;
 import com.spring.spring.service.ArtCollectionService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,12 @@ public class ArtCollectionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<List<ArtCollectionDetailDTO>> searchCollections(@RequestBody CollectionSearchDTO searchDTO) {
+        List<ArtCollectionDetailDTO> results = artCollectionService.searchCollections(searchDTO);
+        return ResponseEntity.ok(results);
     }
 
     // --- POST create art collection ---
