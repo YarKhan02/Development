@@ -2,17 +2,16 @@ package com.spring.spring.controller;
 
 import com.spring.spring.dto.ArtPieceDTO;
 import com.spring.spring.dto.ArtPieceWithArtistDTO;
-import com.spring.spring.projections.ArtPieceProjection;
 import com.spring.spring.service.ArtPieceService;
 
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -32,6 +31,14 @@ public class ArtPieceController {
     @GetMapping
     public ResponseEntity<List<ArtPieceDTO>> getAllArtPieces() {
         return ResponseEntity.ok(artPieceService.getAllArtPieces());
+    }
+
+    // --- GET all artPieces with pagination ---
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<ArtPieceDTO>> getAllArtPieces(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(artPieceService.getAllArtPiecesPagination(page, size));
     }
 
     // --- GET artPiece by ID ---
@@ -64,8 +71,8 @@ public class ArtPieceController {
 
     // --- POST create artPiece ---
     @PostMapping
-    public ResponseEntity<ArtPieceDTO> createArtPiece(@Valid @RequestBody ArtPieceDTO artPieceDTO) {
-        ArtPieceDTO saved = artPieceService.createArtPiece(artPieceDTO);
+    public ResponseEntity<List<ArtPieceDTO>> createArtPiece(@Valid @RequestBody List<ArtPieceDTO> artPieceDTO) {
+        List<ArtPieceDTO> saved = artPieceService.createArtPiece(artPieceDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 

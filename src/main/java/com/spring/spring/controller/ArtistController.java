@@ -7,6 +7,7 @@ import com.spring.spring.service.ArtistService;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,15 @@ public class ArtistController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // --- GET artists with pagination ---
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<ArtistDTO>> getArtistsWithPagination(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<ArtistDTO> artists = artistService.getArtistsWithPagination(page, size);
+        return ResponseEntity.ok(artists);
     }
 
     // --- GET artist by name search ---

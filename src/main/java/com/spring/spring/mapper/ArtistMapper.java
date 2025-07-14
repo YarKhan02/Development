@@ -6,6 +6,7 @@ import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.Artist;
 import com.spring.spring.entity.ArtistProfile;
 import com.spring.spring.projections.ArtPieceIdProjection;
+import com.spring.spring.projections.ArtistProjection;
 import com.spring.spring.projections.DetailArtistProjection;
 import com.spring.spring.projections.ProfileProjection;
 import org.springframework.stereotype.Component;
@@ -50,6 +51,14 @@ public class ArtistMapper {
                         .stream()
                         .map(ArtPieceIdProjection::getId)
                         .collect(Collectors.toList())
+        );
+    }
+
+    public static ArtistDTO fromProjection(ArtistProjection artist) {
+        return new ArtistDTO(
+                artist.getId(),
+                artist.getName(),
+                artist.getBio()
         );
     }
 

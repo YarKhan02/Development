@@ -20,7 +20,9 @@ public class ArtistDTO {
     private String bio;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Integer profileId;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private ProfileDTO profile;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<Integer> artPieceIds;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ArtistStatus status;
@@ -40,5 +42,11 @@ public class ArtistDTO {
         this.bio = bio;
         this.profile = profile;
         this.artPieceIds = artPieceIds;
+    }
+
+    public ArtistDTO(int id, String name, String bio) {
+        this.id = id;
+        this.name = name;
+        this.bio = bio;
     }
 }

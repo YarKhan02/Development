@@ -2,7 +2,7 @@ package com.spring.spring.service;
 
 import com.spring.spring.dto.ArtPieceDTO;
 import com.spring.spring.dto.ArtPieceWithArtistDTO;
-import com.spring.spring.projections.ArtPieceProjection;
+import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,7 +18,9 @@ public interface ArtPieceService {
 
     List<ArtPieceDTO> getArtPiecesByPrice(ArtPieceDTO price);
 
-    ArtPieceDTO createArtPiece(ArtPieceDTO artPieceDTO);
+    Page<ArtPieceDTO> getAllArtPiecesPagination(int page, int size);
+
+    List<ArtPieceDTO> createArtPiece(List<ArtPieceDTO> artPieceDTO);
 
     Optional<ArtPieceDTO> updateArtPiece(int id, ArtPieceDTO artPieceDTO);
 

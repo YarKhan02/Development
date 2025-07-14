@@ -10,6 +10,9 @@ import com.spring.spring.projections.ArtistProjection;
 import com.spring.spring.repository.ArtistProfileRepository;
 import com.spring.spring.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,6 +43,14 @@ public class ArtistImpl implements ArtistService {
         return Optional.ofNullable(artistRepository.findProjectedById(id))
                 .map(ArtistMapper::fromProjection)
                 .orElse(null);
+    }
+
+    // GET artists with pagination
+    @Override
+    public Page<ArtistDTO> getArtistsWithPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ArtistProjection> projectionPage = artistRepository.findAllProjectedWithPagination(pageable);
+        return projectionPage.map(ArtistMapper::fromProjection);
     }
 
     // GET artist-by-name search

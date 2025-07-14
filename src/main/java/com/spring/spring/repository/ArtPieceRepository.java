@@ -3,6 +3,9 @@ package com.spring.spring.repository;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.projections.ArtPieceProjection;
 import com.spring.spring.projections.ArtPieceWithArtistProjection;
+import com.spring.spring.projections.FlatArtPieceProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -31,6 +34,51 @@ public interface ArtPieceRepository extends JpaRepository<ArtPiece, Integer> {
     FROM ArtPiece a
     """)
     List<ArtPieceProjection> findAllProjectedArtPieces();
+
+    @Query("SELECT a.id FROM ArtPiece a")
+    Page<Integer> findPaginatedArtPieceIds(Pageable pageable);
+
+    @Query("""
+    SELECT a.id AS id,
+           a.title AS title,
+           a.description AS description,
+           a.price AS price,
+           a.artist.name AS artistName,
+           a.type AS type,
+           c AS artCollection
+    FROM ArtPiece a
+    LEFT JOIN a.artCollections c
+    WHERE a.id IN :ids
+    """)
+    List<FlatArtPieceProjection> findFlatArtPiecesByIds(@Param("ids") List<Integer> ids);
+
+
+    @Query("""
+    SELECT a.id AS id,
+           a.title AS title,
+           a.description AS description,
+           a.price AS price,
+           a.artist.name AS artistName,
+           a.type AS type,
+           c AS artCollection
+    FROM ArtPiece a
+    LEFT JOIN a.artCollections c
+    """)
+    Page<FlatArtPieceProjection> findAllFlatProjectedArtPieces(Pageable pageable);
+
+    @Query("""
+    SELECT a.id AS id,
+           a.title AS title,
+           a.description AS description,
+           a.price AS price,
+           a.artist.name AS artistName,
+           a.type AS type,
+           c AS artCollection
+    FROM ArtPiece a
+    LEFT JOIN a.artCollections c
+    """)
+    List<FlatArtPieceProjection> findAllFlatProjectedArtPieces();
+
 
     @Query("""
     SELECT a.id AS id,

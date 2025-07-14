@@ -8,6 +8,8 @@ import com.spring.spring.entity.Artist;
 import com.spring.spring.projections.ArtPieceProjection;
 import com.spring.spring.projections.ArtPieceWithArtistProjection;
 import com.spring.spring.projections.CollectionIdProjection;
+import com.spring.spring.projections.FlatArtPieceProjection;
+import org.springframework.data.domain.Page;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -44,11 +46,11 @@ public class ArtPieceMapper {
         );
     }
 
-    public static List<ArtPieceDTO> deduplicate(List<ArtPieceProjection> projections) {
+    public static List<ArtPieceDTO> deduplicate(List<FlatArtPieceProjection> projections) {
         Map<Integer, ArtPieceDTO> map = new LinkedHashMap<>();
 
-        for (ArtPieceProjection p : projections) {
-            map.computeIfAbsent(p.getId(), id -> new ArtPieceDTO(
+        for (FlatArtPieceProjection p : projections) {
+            ArtPieceDTO dto = map.computeIfAbsent(p.getId(), id -> new ArtPieceDTO(
                     p.getId(),
                     p.getTitle(),
                     p.getDescription(),
@@ -58,16 +60,38 @@ public class ArtPieceMapper {
                     p.getType()
             ));
 
-            ArtPieceDTO dto = map.get(p.getId());
-            Set<Integer> collectionIds = p.getArtCollections()
-                    .stream()
-                    .map(CollectionIdProjection::getId)
-                    .collect(Collectors.toSet());
-            dto.getCollectionIds().addAll(collectionIds);
+            CollectionIdProjection c = p.getArtCollection();
+            if (c != null) {
+                dto.getCollectionIds().add(c.getId());
+            }
         }
 
         return new ArrayList<>(map.values());
     }
+
+    public static List<ArtPieceDTO> deduplicate(Page<FlatArtPieceProjection> projections) {
+        Map<Integer, ArtPieceDTO> map = new LinkedHashMap<>();
+
+        for (FlatArtPieceProjection p : projections) {
+            ArtPieceDTO dto = map.computeIfAbsent(p.getId(), id -> new ArtPieceDTO(
+                    p.getId(),
+                    p.getTitle(),
+                    p.getDescription(),
+                    p.getPrice(),
+                    p.getArtistName(),
+                    new HashSet<>(),
+                    p.getType()
+            ));
+
+            CollectionIdProjection c = p.getArtCollection();
+            if (c != null) {
+                dto.getCollectionIds().add(c.getId());
+            }
+        }
+
+        return new ArrayList<>(map.values());
+    }
+
 
     public static ArtPieceWithArtistDTO fromArtPieceWithArtistProjection(ArtPieceWithArtistProjection art) {
         return new ArtPieceWithArtistDTO(
@@ -90,7 +114,8 @@ public class ArtPieceMapper {
 
         // Placeholders for artist and collections
         art.setArtist(new Artist(dto.getArtistId(), null, null, null, null, null));
-        art.setArtCollections(new HashSet<>()); // Actual objects should be fetched elsewhere
+        art.setArtCollections(new HashSet<>());
+        art.setType(dto.getType());
         return art;
     }
 

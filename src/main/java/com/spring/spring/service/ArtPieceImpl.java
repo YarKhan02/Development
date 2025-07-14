@@ -5,16 +5,21 @@ import com.spring.spring.dto.ArtPieceWithArtistDTO;
 import com.spring.spring.entity.ArtPiece;
 import com.spring.spring.entity.Artist;
 import com.spring.spring.mapper.ArtPieceMapper;
-import com.spring.spring.projections.ArtPieceProjection;
+import com.spring.spring.projections.FlatArtPieceProjection;
 import com.spring.spring.repository.ArtPieceRepository;
 import com.spring.spring.repository.ArtistRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArtPieceImpl implements ArtPieceService {
@@ -30,7 +35,7 @@ public class ArtPieceImpl implements ArtPieceService {
 
     // Get all art pieces as DTOs
     public List<ArtPieceDTO> getAllArtPieces() {
-        List<ArtPieceProjection> projections = artPieceRepository.findAllProjectedArtPieces();
+        List<FlatArtPieceProjection> projections = artPieceRepository.findAllFlatProjectedArtPieces();
         return ArtPieceMapper.deduplicate(projections);
     }
 
@@ -48,6 +53,20 @@ public class ArtPieceImpl implements ArtPieceService {
                 .toList();
     }
 
+    // Get all art pieces with pagination
+    public Page<ArtPieceDTO> getAllArtPiecesPagination(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Integer> pageIds = artPieceRepository.findPaginatedArtPieceIds(pageable);
+        if (pageIds.isEmpty()) { return Page.empty(); }
+
+        List<FlatArtPieceProjection> projections = artPieceRepository.findFlatArtPiecesByIds(pageIds.getContent());
+
+        List<ArtPieceDTO> deduped = ArtPieceMapper.deduplicate(projections);
+
+        return new PageImpl<>(deduped, pageable, pageIds.getTotalElements());
+    }
+
     // Get all art pieces by price as DTOs
     public List<ArtPieceDTO> getArtPiecesByPrice(ArtPieceDTO price) {
         return artPieceRepository.findByPrice(price.getPrice())
@@ -57,10 +76,15 @@ public class ArtPieceImpl implements ArtPieceService {
     }
 
     // Create a new artPiece and return as DTO
-    public ArtPieceDTO createArtPiece(ArtPieceDTO artPieceDTO) {
-        ArtPiece artPiece = ArtPieceMapper.toEntity(artPieceDTO);
-        ArtPiece saved = artPieceRepository.save(artPiece);
-        return ArtPieceMapper.toDTO(saved);
+    public List<ArtPieceDTO> createArtPiece(List<ArtPieceDTO> artPieceDTO) {
+        List<ArtPiece> artPiece = artPieceDTO.stream()
+                .map(ArtPieceMapper::toEntity)
+                .collect(Collectors.toList());
+        List<ArtPiece> saved = artPieceRepository.saveAll(artPiece);
+
+        return saved.stream()
+                .map(ArtPieceMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     // Update an existing artPiece and return as DTO if found

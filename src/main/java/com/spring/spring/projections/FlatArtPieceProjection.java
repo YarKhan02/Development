@@ -3,14 +3,13 @@ package com.spring.spring.projections;
 import com.spring.spring.enums.ArtPieceType;
 
 import java.math.BigDecimal;
-import java.util.Set;
 
-public interface ArtPieceProjection {
+public interface FlatArtPieceProjection {
     int getId();
     String getTitle();
     String getDescription();
     BigDecimal getPrice();
     String getArtistName();
-    Set<CollectionIdProjection> getArtCollections();
     ArtPieceType getType();
+    CollectionIdProjection getArtCollection(); // nullable
 }

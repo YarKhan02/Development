@@ -41,6 +41,15 @@ public class ArtPieceDTO {
         this.type = type;
     }
 
+    public ArtPieceDTO(int id, String title, String description, BigDecimal price, int artistId, ArtPieceType type) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.artistId = artistId;
+        this.type = type;
+    }
+
     public ArtPieceDTO(int id, String title, String description, BigDecimal price, String artistName, Set<Integer> collectionIds, ArtPieceType type) {
         this.id = id;
         this.title = title;
