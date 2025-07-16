@@ -23,6 +23,9 @@ public interface ArtistRepository extends JpaRepository<Artist, Integer> {
     @Query("SELECT a.id AS id, a.name AS name, a.bio AS bio FROM Artist a")
     List<ArtistProjection> findAllProjected();
 
+    @Query("SELECT a.id AS id, a.name AS name, a.bio AS bio FROM Artist a WHERE a.id = :id")
+    Optional<ArtistProjection> findProjected(@Param("id") Integer id);
+
     @Query("SELECT a FROM Artist a")
     Page<ArtistProjection> findAllProjectedWithPagination(Pageable pageable);
 
