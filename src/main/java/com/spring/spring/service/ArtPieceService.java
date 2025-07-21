@@ -4,7 +4,6 @@ import com.spring.spring.dto.ArtPieceDTO;
 import com.spring.spring.dto.ArtPieceWithArtistDTO;
 import org.springframework.data.domain.Page;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 

@@ -17,8 +17,6 @@ import java.util.Optional;
 
 @Repository
 public interface ArtPieceRepository extends JpaRepository<ArtPiece, Integer> {
-//    @Query("SELECT ap FROM ArtPiece ap JOIN FETCH ap.artist WHERE ap.artist.id = :artistId")
-//    List<ArtPiece> findByArtistId(@Param("artistId") int artistId);
 
     @Query(value = "SELECT * FROM art_piece WHERE price > :amount", nativeQuery = true)
     List<ArtPiece> findByPrice(@Param("amount") BigDecimal amount);

@@ -9,7 +9,6 @@ import com.spring.spring.projections.FlatArtPieceProjection;
 import com.spring.spring.repository.ArtPieceRepository;
 import com.spring.spring.repository.ArtistRepository;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

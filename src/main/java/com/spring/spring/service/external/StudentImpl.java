@@ -6,8 +6,6 @@ import com.spring.spring.dto.external.StudentDTO;
 import com.spring.spring.mapper.ArtistMapper;
 import com.spring.spring.repository.ArtistRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
